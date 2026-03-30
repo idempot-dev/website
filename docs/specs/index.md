@@ -16,7 +16,7 @@ These specifications define the expected behavior for idempotency middleware imp
 
 ## Download
 
-[Download idempotency.feature](/specs/idempotency.feature) — Use in your test suite
+[Download idempotency.feature (raw)](https://raw.githubusercontent.com/idempot-dev/website/main/docs/specs/idempotency.feature) — Use in your test suite
 
 ## Specification
 
