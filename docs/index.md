@@ -1,24 +1,34 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
   name: "idempot.dev"
   text: "Idempotency middlewares"
-  tagline: My great project tagline
+  tagline: Once is enough.
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Why Idempotency
+      link: /why-idempotency
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: View Specs
+      link: /specs
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: IETF Spec Compliant
+    details: Implements draft-ietf-httpapi-idempotency-key-header-07
+  - title: Request Fingerprinting
+    details: Detects conflicts when the same key is used with different payloads
+  - title: Pluggable Storage
+    details: Redis, PostgreSQL, MySQL, SQLite — use your existing infrastructure
 ---
+
+## Projects
+
+### idempot-js
+
+Idempotency middleware for Hono, Express, and Fastify.
+
+**Frameworks:** Hono, Express, Fastify  
+**Runtimes:** Node.js, Bun, Deno
+
+[GitHub](https://github.com/idempot-dev/idempot-js) · [npm](https://www.npmjs.com/package/@idempot/core)
