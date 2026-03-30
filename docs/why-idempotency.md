@@ -1,3 +1,10 @@
+---
+prev: false
+next:
+  text: "Specifications"
+  link: "/specs"
+---
+
 # Why Idempotency Matters
 
 In distributed systems, requests fail. Networks timeout, load balancers retry, users double-click. Without protection, these failures create duplicate transactions—double charges, duplicate orders, inconsistent state.

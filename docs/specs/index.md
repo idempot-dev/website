@@ -1,3 +1,10 @@
+---
+prev:
+  text: "Why Idempotency"
+  link: "/why-idempotency"
+next: false
+---
+
 # Cucumber Specifications
 
 RFC 7807-compliant specifications for idempotency middleware implementations.
