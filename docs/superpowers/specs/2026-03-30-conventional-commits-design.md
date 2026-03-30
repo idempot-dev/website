@@ -1,16 +1,20 @@
 # Conventional Commits Setup
 
 ## Goal
+
 Add conventional commits verification via pre-commit hook and GitHub workflow.
 
 ## Approach
+
 Mirror idempot-js setup exactly.
 
 ## Implementation
 
 ### 1. Dependencies
+
 Add to `package.json`:
-- `@commitlint/cli` 
+
+- `@commitlint/cli`
 - `@commitlint/config-conventional`
 - `husky`
 - `@husky/pre-push`
@@ -18,7 +22,9 @@ Add to `package.json`:
 Run `npm install` to install and generate lockfile.
 
 ### 2. Commitlint Config
+
 Create `.commitlintrc.json`:
+
 ```json
 {
   "extends": ["@commitlint/config-conventional"]
@@ -26,16 +32,19 @@ Create `.commitlintrc.json`:
 ```
 
 ### 3. Husky Setup
+
 Initialize husky: `npx husky init`
 
 This creates `.husky/` directory with `pre-commit` hook.
 
 Add `commit-msg` hook at `.husky/commit-msg`:
+
 ```sh
 npx --no -- commitlint --edit ${1}
 ```
 
 ### 4. GitHub Workflow
+
 Create `.github/workflows/ci.yml`:
 
 ```yaml
@@ -68,5 +77,6 @@ jobs:
 ```
 
 ## Verification
+
 - Pre-commit: Try committing with non-conforming message → should fail
 - GitHub: Open PR with non-conforming message → job should fail

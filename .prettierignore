@@ -1,0 +1,8 @@
+node_modules
+dist
+*.min.js
+package-lock.json
+CLAUDE.md
+.claude
+docs/plans
+.vitepress/cache

@@ -13,6 +13,7 @@
 ## Chunk 1: Install Dependencies
 
 ### Files
+
 - Modify: `package.json`
 
 - [ ] **Step 1: Install commitlint and husky**
@@ -37,6 +38,7 @@ git commit -m "chore: add commitlint and husky dependencies"
 ## Chunk 2: Configure Commitlint
 
 ### Files
+
 - Create: `.commitlintrc.json`
 
 - [ ] **Step 1: Create commitlint config**
@@ -61,6 +63,7 @@ git commit -m "chore: add commitlint config"
 ## Chunk 3: Setup Husky
 
 ### Files
+
 - Create: `.husky/commit-msg`
 - Create: `.git/hooks/commit-msg` (via husky)
 - Modify: `package.json` (husky init)
@@ -74,6 +77,7 @@ npx husky init
 - [ ] **Step 2: Create commit-msg hook**
 
 Create `.husky/commit-msg`:
+
 ```sh
 npx --no -- commitlint --edit ${1}
 ```
@@ -96,6 +100,7 @@ git commit -m "chore: add husky commit-msg hook"
 ## Chunk 4: Add GitHub Workflow
 
 ### Files
+
 - Create: `.github/workflows/ci.yml`
 
 - [ ] **Step 1: Create workflows directory**
@@ -149,6 +154,7 @@ git commit -m "ci: add commitlint workflow"
 ## Chunk 5: Verify
 
 ### Files
+
 - Modify: (verification only)
 
 - [ ] **Step 1: Test pre-commit hook with invalid message**
@@ -160,6 +166,7 @@ git commit --allow-empty -m "test: testing" --no-verify
 ```
 
 Then try valid message:
+
 ```bash
 git commit --allow-empty -m "feat: valid commit" --no-verify
 ```
