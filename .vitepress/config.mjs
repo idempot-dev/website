@@ -1,30 +1,34 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from "vitepress";
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
   srcDir: "docs",
-  
-  title: "idempot.dev",
-  description: "Idempotency middlewares",
-  themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
-    nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
-    ],
 
+  title: "idempot.dev",
+  description: "Idempotency middlewares for resilient APIs",
+  themeConfig: {
+    nav: [
+      { text: "Home", link: "/" },
+      { text: "Why Idempotency", link: "/why-idempotency" },
+      { text: "Specs", link: "/specs" }
+    ],
     sidebar: [
       {
-        text: 'Examples',
+        text: "Documentation",
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: "Why Idempotency", link: "/why-idempotency" },
+          { text: "Specifications", link: "/specs" }
+        ]
+      },
+      {
+        text: "Projects",
+        items: [
+          {
+            text: "idempot-js",
+            link: "https://github.com/idempot-dev/idempot-js"
+          }
         ]
       }
     ],
-
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
-    ]
+    socialLinks: [{ icon: "github", link: "https://github.com/idempot-dev" }]
   }
-})
+});
