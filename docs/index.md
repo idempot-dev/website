@@ -32,4 +32,4 @@ Idempotency middleware for Hono, Express, and Fastify.
 **Runtimes:** Node.js, Bun, Deno  
 **Storage:** Redis, PostgreSQL, MySQL, SQLite
 
-[GitHub](https://github.com/idempot-dev/idempot-js) · [npm](https://www.npmjs.com/package/@idempot/core)
+[docs](https://js.idempot.dev) · [GitHub](https://github.com/idempot-dev/idempot-js) · [npm](https://www.npmjs.com/package/@idempot/core)
