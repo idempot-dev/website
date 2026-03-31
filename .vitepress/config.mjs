@@ -5,6 +5,22 @@ export default defineConfig({
 
   title: "idempot.dev",
   description: "Idempotency middlewares for resilient APIs",
+
+  head: [
+    [
+      "script",
+      {
+        async: true,
+        src: "https://plausible.io/js/pa-9RIBzBG_R4o5GyH7c1n9C.js"
+      }
+    ],
+    [
+      "script",
+      {},
+      "window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()"
+    ]
+  ],
+
   themeConfig: {
     nav: [
       { text: "Home", link: "/" },
