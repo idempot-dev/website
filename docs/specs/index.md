@@ -7,7 +7,7 @@ next: false
 
 # Cucumber Specifications
 
-These Cucumber specifications represent idempot.dev's interpretation and opinions on how [draft-ietf-httpapi-idempotency-key-header-07](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-idempotency-key-header-07) should be implemented. While the IETF draft defines the requirements, these specs codify specific implementation choices that ensure consistency across all idempot.dev projects.
+These Cucumber specifications codify idempot.dev's interpretation of [draft-ietf-httpapi-idempotency-key-header-07](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-idempotency-key-header-07). The IETF draft defines the requirements; these specs translate them into implementation choices shared by all idempot.dev projects.
 
 ## Overview
 
