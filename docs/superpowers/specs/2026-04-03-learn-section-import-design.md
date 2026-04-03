@@ -48,7 +48,9 @@ Delete: docs/why-idempotency.md
 { text: "Learn", link: "/learn/" }
 ```
 
-**Sidebar:** Context-aware sidebar for /learn/ section
+**Sidebar:** Context-aware sidebar (object format, not array)
+
+Current sidebar is array format. Must convert to object format for path-specific sidebars:
 
 ```javascript
 sidebar: {
@@ -64,9 +66,25 @@ sidebar: {
       ]
     }
   ],
-  // other paths...
+  "/": [
+    {
+      text: "Documentation",
+      items: [
+        { text: "Why Idempotency", link: "/why-idempotency" },
+        { text: "Specifications", link: "/specs" }
+      ]
+    },
+    {
+      text: "Projects",
+      items: [
+        { text: "idempot-js", link: "https://github.com/idempot-dev/idempot-js" }
+      ]
+    }
+  ]
 }
 ```
+
+**Important:** The "/" path sidebar will be replaced in commit 3 when we update navigation.
 
 ## Technical Changes
 
@@ -77,6 +95,8 @@ Add to package.json:
 ```json
 "vitepress-plugin-mermaid": "^2.0.17"
 ```
+
+**Note:** Version matches idempot-js to ensure consistent diagram rendering.
 
 ### VitePress Configuration
 
@@ -163,8 +183,9 @@ Preserve sequence diagrams in `why.md` without modification.
 **Commit 3: Update navigation**
 
 - Replace "Why Idempotency" with "Learn" in nav
+- Convertsidebar from array to object format
 - Add "/learn/" sidebar configuration
-- Remove "Why Idempotency" from existing sidebar
+- Update "/" sidebar: replace "Why Idempotency" with link to "/learn/" (or remove from documentation section)
 
 **Commit 4: Remove old file**
 
@@ -178,9 +199,15 @@ After implementation:
 2. Navigate to /learn/ - verify index loads
 3. Check mermaid diagrams render in /learn/why
 4. Verify YouTube video embed works
-5. Test sidebar navigation through all learn pages
-6. Verify code examples display correctly
-7. Run `npm run build` - verify production build succeeds
+5. Test sidebar navigation:
+   - Click each item in learn sidebar
+   - Verify correct page loads
+6. Test internal links:
+   - Click links between learn pages
+   - Verify they navigate correctly
+7. Verify code examples display correctly with syntax highlighting
+8. Run `npm run build` - verify production build succeeds
+9. Run `npm run preview` - test production build locally
 
 ## Success Criteria
 
