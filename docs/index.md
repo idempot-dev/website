@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: Why Idempotency
-      link: /why-idempotency
+      link: /learn/why
     - theme: alt
       text: View Specs
       link: /specs
@@ -18,8 +18,6 @@ features:
     details: Implements draft-ietf-httpapi-idempotency-key-header-07
   - title: Request Fingerprinting
     details: Detects conflicts when the same key is used with different payloads
-  - title: Pluggable Storage
-    details: Redis, PostgreSQL, MySQL, SQLite — use your existing infrastructure
 ---
 
 ## Projects
