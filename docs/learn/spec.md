@@ -57,4 +57,4 @@ The spec leaves some things to the application layer:
 
 ✅ **Full compliance** with draft-ietf-httpapi-idempotency-key-header-07
 
-All MUST and SHOULD requirements are implemented. The library gives you the flexibility to choose which optional features to enable based on your API's needs.
+All MUST and SHOULD requirements are implemented.

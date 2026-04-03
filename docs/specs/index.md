@@ -1,13 +1,13 @@
 ---
 prev:
   text: "Why Idempotency"
-  link: "/why-idempotency"
+  link: "/learn/why"
 next: false
 ---
 
 # Cucumber Specifications
 
-RFC 7807-compliant specifications for idempotency middleware implementations.
+These Cucumber specifications codify idempot.dev's interpretation of [draft-ietf-httpapi-idempotency-key-header-07](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-idempotency-key-header-07). The IETF draft defines the requirements; these specs translate them into implementation choices shared by all idempot.dev projects.
 
 ## Overview
 
