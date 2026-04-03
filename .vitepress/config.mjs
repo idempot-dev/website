@@ -29,27 +29,44 @@ export default defineConfig({
     lastUpdated: true,
     nav: [
       { text: "Home", link: "/" },
-      { text: "Why Idempotency", link: "/why-idempotency" },
+      { text: "Learn", link: "/learn/" },
       { text: "Specs", link: "/specs" }
     ],
-    sidebar: [
-      {
-        text: "Documentation",
-        items: [
-          { text: "Why Idempotency", link: "/why-idempotency" },
-          { text: "Specifications", link: "/specs" }
-        ]
-      },
-      {
-        text: "Projects",
-        items: [
-          {
-            text: "idempot-js",
-            link: "https://github.com/idempot-dev/idempot-js"
-          }
-        ]
-      }
-    ],
+    sidebar: {
+      "/learn/": [
+        {
+          text: "Learn",
+          items: [
+            { text: "Overview", link: "/learn/" },
+            { text: "Why Idempotency", link: "/learn/why" },
+            {
+              text: "Duplicated vs Repeated",
+              link: "/learn/duplicated-vs-repeated"
+            },
+            {
+              text: "Client Key Strategies",
+              link: "/learn/client-key-strategies"
+            },
+            { text: "Spec Compliance", link: "/learn/spec" }
+          ]
+        }
+      ],
+      "/": [
+        {
+          text: "Documentation",
+          items: [{ text: "Specifications", link: "/specs" }]
+        },
+        {
+          text: "Projects",
+          items: [
+            {
+              text: "idempot-js",
+              link: "https://github.com/idempot-dev/idempot-js"
+            }
+          ]
+        }
+      ]
+    },
     socialLinks: [{ icon: "github", link: "https://github.com/idempot-dev" }]
   }
 });
