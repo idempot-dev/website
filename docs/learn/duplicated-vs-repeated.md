@@ -92,7 +92,7 @@ Content-Type: application/json
 
 ## Server Implementation
 
-**Note:** The following example uses idempot-js middleware with the Hono framework. For framework-specific implementations, see the [idempot-js documentation](https://github.com/idempot-dev/idempot-js).
+**Note:** The following example uses [idempot-js](https://js.idempot.dev) middleware with the Hono framework. For framework-specific implementations, see the [idempot-js documentation](https://js.idempot.dev).
 
 ```javascript
 import { Hono } from "hono";

@@ -1,12 +1,12 @@
 # IETF Spec Compliance
 
-The idempot-js library implements [draft-ietf-httpapi-idempotency-key-header-07](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-idempotency-key-header-07), the IETF standard for the Idempotency-Key HTTP header.
+The [idempot-js](https://js.idempot.dev) library implements [draft-ietf-httpapi-idempotency-key-header-07](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-idempotency-key-header-07), the IETF standard for the Idempotency-Key HTTP header.
 
 This document details how the library complies with each requirement in the specification.
 
 ## Implemented Requirements
 
-**Note:** This page describes idempot-js implementation of the IETF specification. For other implementations, refer to your framework's documentation.
+**Note:** This page describes [idempot-js](https://js.idempot.dev) implementation of the IETF specification.
 
 ### MUST Requirements (Required)
 
