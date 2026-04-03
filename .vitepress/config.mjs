@@ -6,6 +6,10 @@ export default defineConfig({
   title: "idempot.dev",
   description: "Idempotency middlewares for resilient APIs",
 
+  sitemap: {
+    hostname: "https://idempot.dev/"
+  },
+
   head: [
     [
       "script",
@@ -22,6 +26,7 @@ export default defineConfig({
   ],
 
   themeConfig: {
+    lastUpdated: true,
     nav: [
       { text: "Home", link: "/" },
       { text: "Why Idempotency", link: "/why-idempotency" },
