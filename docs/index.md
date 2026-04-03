@@ -16,8 +16,10 @@ hero:
 features:
   - title: IETF Spec Compliant
     details: Implements draft-ietf-httpapi-idempotency-key-header-07
-  - title: Request Fingerprinting
-    details: Detects conflicts when the same key is used with different payloads
+    link: /learn/spec
+  - title: Learn
+    details: Understand why idempotency matters for reliable APIs
+    link: /learn/
 ---
 
 ## Projects
