@@ -30,7 +30,11 @@ export default defineConfig({
     nav: [
       { text: "Home", link: "/" },
       { text: "Learn", link: "/learn/" },
-      { text: "Specs", link: "/specs" }
+      { text: "Specs", link: "/specs" },
+      {
+        text: "Projects",
+        items: [{ text: "idempot-js", link: "https://js.idempot.dev" }]
+      }
     ],
     sidebar: {
       "/learn/": [
