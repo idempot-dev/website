@@ -16,7 +16,7 @@
 
 - Modify: `package.json`
 
-- [ ] **Step 1: Add vitepress-plugin-mermaid dependency**
+- [ ] **Step 1: Add vitepress-mermaid-renderer dependency**
 
 Open `package.json` and add the mermaid plugin to devDependencies after vitepress:
 
@@ -32,9 +32,11 @@ Open `package.json` and add the mermaid plugin to devDependencies after vitepres
   "lint-staged": "^16.4.0",
   "prettier": "^3.8.1",
   "vitepress": "^2.0.0-alpha.17",
-  "vitepress-plugin-mermaid": "^2.0.17"
+  "vitepress-mermaid-renderer": "^1.1.20"
 }
 ```
+
+Note: Using vitepress-mermaid-renderer instead of vitepress-plugin-mermaid for VitePress 2.x compatibility.
 
 - [ ] **Step 2: Install dependencies**
 
@@ -44,9 +46,9 @@ Expected: Dependencies install successfully, package-lock.json updates.
 
 - [ ] **Step 3: Verify installation**
 
-Run: `grep vitepress-plugin-mermaid package-lock.json`
+Run: `grep vitepress-mermaid-renderer package-lock.json`
 
-Expected: Shows vitepress-plugin-mermaid entry with version 2.0.17.
+Expected: Shows vitepress-mermaid-renderer entry with version 1.1.20.
 
 - [ ] **Step 4: Commit**
 
@@ -61,93 +63,47 @@ git commit -m "chore: add vitepress-plugin-mermaid dependency"
 
 **Files:**
 
-- Modify: `.vitepress/config.mjs`
+- Create: `.vitepress/theme/index.js`
 
-- [ ] **Step 1: Import mermaid plugin**
+- [ ] **Step 1: Create theme directory**
 
-Add import at the top of `.vitepress/config.mjs`:
+Run: `mkdir -p .vitepress/theme`
 
-```javascript
-import { defineConfig } from "vitepress";
-import { withMermaid } from "vitepress-plugin-mermaid";
-```
+- [ ] **Step 2: Create theme/index.js**
 
-- [ ] **Step 2: Wrap configuration with mermaid**
-
-Replace the export statement to wrap with `withMermaid`:
+Create `.vitepress/theme/index.js` with the following content:
 
 ```javascript
-export default withMermaid(
-  defineConfig({
-    srcDir: "docs",
+import { h, nextTick, watch } from "vue";
+import DefaultTheme from "vitepress/theme";
+import { useData } from "vitepress";
+import { createMermaidRenderer } from "vitepress-mermaid-renderer";
 
-    title: "idempot.dev",
-    description: "Idempotency middlewares for resilient APIs",
+export default {
+  extends: DefaultTheme,
+  Layout: () => {
+    const { isDark } = useData();
 
-    sitemap: {
-      hostname: "https://idempot.dev/"
-    },
+    const initMermaid = () => {
+      const mermaidRenderer = createMermaidRenderer({
+        theme: isDark.value ? "dark" : "forest"
+      });
+    };
 
-    markdown: {
-      mermaid: true
-    },
+    // initial mermaid setup
+    nextTick(() => initMermaid());
 
-    vite: {
-      optimizeDeps: {
-        include: [
-          "dayjs",
-          "@braintree/sanitize-url",
-          "debug",
-          "cytoscape",
-          "cytoscape-cose-bilkent"
-        ]
+    // on theme change, re-render mermaid charts
+    watch(
+      () => isDark.value,
+      () => {
+        initMermaid();
       }
-    },
+    );
 
-    head: [
-      [
-        "script",
-        {
-          async: true,
-          src: "https://plausible.io/js/pa-9RIBzBG_R4o5GyH7c1n9C.js"
-        }
-      ],
-      [
-        "script",
-        {},
-        "window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()"
-      ]
-    ],
-
-    themeConfig: {
-      lastUpdated: true,
-      nav: [
-        { text: "Home", link: "/" },
-        { text: "Why Idempotency", link: "/why-idempotency" },
-        { text: "Specs", link: "/specs" }
-      ],
-      sidebar: [
-        {
-          text: "Documentation",
-          items: [
-            { text: "Why Idempotency", link: "/why-idempotency" },
-            { text: "Specifications", link: "/specs" }
-          ]
-        },
-        {
-          text: "Projects",
-          items: [
-            {
-              text: "idempot-js",
-              link: "https://github.com/idempot-dev/idempot-js"
-            }
-          ]
-        }
-      ],
-      socialLinks: [{ icon: "github", link: "https://github.com/idempot-dev" }]
-    }
-  })
-);
+    return h(DefaultTheme.Layout);
+  }
+};
 ```
 
 - [ ] **Step 3: Verify configuration loads**
@@ -163,9 +119,11 @@ Press: `Ctrl+C`
 - [ ] **Step 5: Commit**
 
 ```bash
-git add .vitepress/config.mjs
-git commit -m "feat: configure mermaid diagram support in vitepress"
+git add .vitepress/theme/index.js
+git commit -m "feat: configure mermaid renderer in vitepress theme"
 ```
+
+Note: Using vitepress-mermaid-renderer with theme-based configuration (compatible with VitePress 2.x) instead of vitepress-plugin-mermaid (requires VitePress 1.x).
 
 ---
 
