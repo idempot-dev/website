@@ -14,8 +14,8 @@ hero:
       link: /specs
 
 features:
-  - title: IETF Spec Compliant
-    details: Implements draft-ietf-httpapi-idempotency-key-header-07
+  - title: IETF Draft Spec Compliant
+    details: All idempot.dev projects implement draft-ietf-httpapi-idempotency-key-header-07 spec
     link: /learn/spec
   - title: Learn
     details: Understand why idempotency matters for reliable APIs
