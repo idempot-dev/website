@@ -74,7 +74,7 @@ export default defineConfig({
     socialLinks: [{ icon: "github", link: "https://github.com/idempot-dev" }],
     footer: {
       message:
-        '<a href="https://js.idempot.dev">idempot-js</a> — Idempotency middleware for Hono, Express, and Fastify',
+        '<a href="https://js.idempot.dev">Get started with idempot-js</a> — Idempotency middleware for Hono, Express, and Fastify',
       copyright:
         'Copyright © 2026 <a href="https://github.com/mroderick">Morgan Roderick</a> and contributors'
     }
