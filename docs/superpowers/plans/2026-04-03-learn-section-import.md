@@ -237,96 +237,34 @@ git commit -m "docs: add learn section index page"
 
 - Create: `docs/learn/why.md`
 
-- [ ] **Step 1: Read source file**
+- [ ] **Step 1: Copy source file**
 
-Read source: `~/code/idempot-dev/idempot-js/docs/learn/why.md`
+Run: `cp ~/code/idempot-dev/idempot-js/docs/learn/why.md docs/learn/why.md`
 
-- [ ] **Step 2: Create why.md**
+Expected: File copied successfully.
 
-Create `docs/learn/why.md` with the following content (exact copy from idempot-js, preserving mermaid diagrams and YouTube embed):
+- [ ] **Step 2: Verify file exists**
 
-````markdown
-# Why Idempotency Matters
+Run: `ls -la docs/learn/why.md`
 
-In distributed systems, networks timeout, load balancers retry, users double-click. Without idempotency, these failures create duplicate transactions: double charges, duplicate orders, inconsistent state.
+Expected: Shows file details, file exists.
 
-## The Problem
+- [ ] **Step 3: Verify content preserved**
 
-Duplicate requests happen more often than you'd think:
+Run: `grep -c "mermaid" docs/learn/why.md`
 
-| Cause            | Example                               |
-| ---------------- | ------------------------------------- |
-| User behavior    | Double-clicking a submit button       |
-| Client retries   | Automatic retry on connection timeout |
-| Network issues   | Request succeeds but response is lost |
-| Load balancers   | Backend timeout triggers retry        |
-| Webhook delivery | Provider retries failed deliveries    |
+Expected: Returns 2 (two mermaid diagrams present).
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Server
+Run: `grep -c "youtube" docs/learn/why.md`
 
-    Client->>Server: POST /api/transfers
-    Server-->>Client: 201 Created (response LOST)
-    Note over Client: Network timeout<br/>Client retries...
-    Client->>Server: POST /api/transfers
-    Server-->>Client: 201 Created
-    Note over Server: ❌ Duplicate created
-```
-````
+Expected: Returns 1 (YouTube embed present).
 
-Each duplicate request creates side effects: duplicate payments, duplicate orders, corrupted data.
-
-## The Pattern
-
-Major APIs like Stripe and PayPal use a simple pattern to solve this:
-
-1. **Client generates a unique key** — typically a UUID for each unique operation
-2. **Key sent as header** — `Idempotency-Key: <uuid>`
-3. **Server stores key + response** — in your database or cache
-4. **On duplicate request** — server returns cached response instead of reprocessing
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Server
-
-    Client->>Server: POST /api/transfers<br/>Idempotency-Key: abc-123
-    Note over Server: Store key, process request
-    Server-->>Client: 201 Created
-    Note over Client: Network timeout<br/>Client retries...
-    Client->>Server: POST /api/transfers<br/>Idempotency-Key: abc-123
-    Note over Server: Key found<br/>Return cached response
-    Server-->>Client: 201 Created
-    Note over Server: ✅ No duplicate
-```
-
-This makes any request safely retryable. The server either processes it once and caches the result, or recognizes the key and returns the previous result.
-
-## Benefits
-
-- **Fault tolerance**: Network interruptions don't cause duplicate transactions
-- **Simplified retry logic**: Clients can safely retry without complex deduplication
-- **Better UX**: Users don't wonder "did that go through?"
-- **API reliability**: Stripe, PayPal, and major processors all use this pattern
-
-Idempot-js implements the [IETF Idempotency-Key Header draft specification](https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-idempotency-key-header-07) for Node.js, Bun, and Deno applications.
-
-## Further Learning
-
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/29NNiZhXe2Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
-**[Try, try again](https://www.youtube.com/watch?v=29NNiZhXe2Q)** — Sam Newman explains the importance of idempotency in distributed systems at LeadDev Berlin 2025.
-
-````
-
-- [ ] **Step 3: Commit**
+- [ ] **Step 4: Commit**
 
 ```bash
 git add docs/learn/why.md
 git commit -m "docs: add why idempotency page with mermaid diagrams"
-````
+```
 
 ---
 
@@ -336,30 +274,45 @@ git commit -m "docs: add why idempotency page with mermaid diagrams"
 
 - Create: `docs/learn/duplicated-vs-repeated.md`
 
-- [ ] **Step 1: Read source file**
+- [ ] **Step 1: Copy source file**
 
-Read source: `~/code/idempot-dev/idempot-js/docs/learn/duplicated-vs-repeated.md`
+Run: `cp ~/code/idempot-dev/idempot-js/docs/learn/duplicated-vs-repeated.md docs/learn/duplicated-vs-repeated.md`
 
-- [ ] **Step 2: Create duplicated-vs-repeated.md with context note**
+Expected: File copied successfully.
 
-Copy the entire content from idempot-js source, then add the context note. The content should be identical to the source file `~/code/idempot-dev/idempot-js/docs/learn/duplicated-vs-repeated.md`, with this addition:
+- [ ] **Step 2: Add context note before Hono example**
 
-After the `## Server Implementation` heading (line 93 in source), add before the code block:
+Use the edit tool to insert the context note after the "## Server Implementation" heading.
 
-```markdown
-**Note:** The following example uses idempot-js middleware with the Hono framework. For framework-specific implementations, see the [idempot-js documentation](https://github.com/idempot-dev/idempot-js).
+The file currently has:
+
+````markdown
+## Server Implementation
+
+```javascript
+import { Hono } from "hono";
 ```
+````
 
-The file should maintain all original content including:
+Change it to:
 
-- Table comparing Duplicated vs Repeated
-- Example with monthly invoice payments
-- Request model JavaScript code
-- HTTP request examples
-- Server implementation code
-- Summary table
+````markdown
+## Server Implementation
 
-- [ ] **Step 3: Commit**
+**Note:** The following example uses idempot-js middleware with the Hono framework. For framework-specific implementations, see the [idempot-js documentation](https://github.com/idempot-dev/idempot-js).
+
+```javascript
+import { Hono } from "hono";
+```
+````
+
+- [ ] **Step 3: Verify edit**
+
+Run: `grep -A 2 "## Server Implementation" docs/learn/duplicated-vs-repeated.md`
+
+Expected: Shows the heading followed by the context note.
+
+- [ ] **Step 4: Commit**
 
 ```bash
 git add docs/learn/duplicated-vs-repeated.md
@@ -374,21 +327,25 @@ git commit -m "docs: add duplicated vs repeated page with framework context"
 
 - Create: `docs/learn/client-key-strategies.md`
 
-- [ ] **Step 1: Read source file**
+- [ ] **Step 1: Copy source file**
 
-Read source: `~/code/idempot-dev/idempot-js/docs/learn/client-key-strategies.md`
+Run: `cp ~/code/idempot-dev/idempot-js/docs/learn/client-key-strategies.md docs/learn/client-key-strategies.md`
 
-- [ ] **Step 2: Create client-key-strategies.md**
+Expected: File copied successfully.
 
-Copy the entire content from `~/code/idempot-dev/idempot-js/docs/learn/client-key-strategies.md` without modifications. The file contains:
+- [ ] **Step 2: Verify file exists**
 
-- Strategy 1: Random Keys (with JavaScript code example)
-- Strategy 2: Database ID as Key (with JavaScript code example)
-- Benefits of each approach
+Run: `ls -la docs/learn/client-key-strategies.md`
 
-No context notes needed - code examples are pure JavaScript patterns, not framework-specific.
+Expected: Shows file details, file exists.
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 3: Verify content**
+
+Run: `grep "Strategy" docs/learn/client-key-strategies.md | head -n 2`
+
+Expected: Shows "Strategy 1: Random Keys" and "Strategy 2: Database ID as Key".
+
+- [ ] **Step 4: Commit**
 
 ```bash
 git add docs/learn/client-key-strategies.md
@@ -403,28 +360,41 @@ git commit -m "docs: add client key strategies page"
 
 - Create: `docs/learn/spec.md`
 
-- [ ] **Step 1: Read source file**
+- [ ] **Step 1: Copy source file**
 
-Read source: `~/code/idempot-dev/idempot-js/docs/learn/spec.md`
+Run: `cp ~/code/idempot-dev/idempot-js/docs/learn/spec.md docs/learn/spec.md`
 
-- [ ] **Step 2: Create spec.md with context note**
+Expected: File copied successfully.
 
-Copy the entire content from `~/code/idempot-dev/idempot-js/docs/learn/spec.md`, then add context note. After the `## Implemented Requirements` heading (line 8 in source), add:
+- [ ] **Step 2: Add context note at start of requirements section**
+
+Use the edit tool to insert the context note after the "## Implemented Requirements" heading.
+
+The file currently has:
 
 ```markdown
-**Note:** This page describes idempot-js implementation of the IETF specification. For other implementations, refer to your framework's documentation.
+## Implemented Requirements
+
+### MUST Requirements (Required)
 ```
 
-The file should maintain all original content including:
+Change it to:
 
-- MUST requirements table
-- SHOULD requirements table
-- MAY requirements table
-- Error responses table
-- What's not covered section
-- Compliance status
+```markdown
+## Implemented Requirements
 
-- [ ] **Step 3: Commit**
+**Note:** This page describes idempot-js implementation of the IETF specification. For other implementations, refer to your framework's documentation.
+
+### MUST Requirements (Required)
+```
+
+- [ ] **Step 3: Verify edit**
+
+Run: `grep -A 3 "## Implemented Requirements" docs/learn/spec.md`
+
+Expected: Shows the heading followed by the context note.
+
+- [ ] **Step 4: Commit**
 
 ```bash
 git add docs/learn/spec.md
