@@ -21,7 +21,8 @@
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,json,md}\"",
     "lint": "eslint .vitepress/config.mjs",
-    "lint:fix": "eslint .vitepress/config.mjs --fix"
+    "lint:fix": "eslint .vitepress/config.mjs --fix",
+    "lint:links": "./scripts/link-check.sh"
   },
   "lint-staged": {
     "*.js": [
