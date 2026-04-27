@@ -1,0 +1,55 @@
+name: Link Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 0 * * *'  # Daily at midnight
+
+jobs:
+  link-checker:
+    name: Link Checker
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write  # Required for creating issues from file
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
+
+      - name: Link Checker
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Check all files in the built site
+          args: |
+            .vitepress/dist
+            --root-dir .vitepress/dist
+            --include-mail=false
+            --exclude "^file://"
+            --accept '200..=299,403'
+          # Don't fail action on broken links (we'll create an issue instead)
+          fail: false
+          # Output format
+          format: markdown
+          # Output file path
+          output: lychee/out.md
+
+      - name: Create Issue From File
+        if: steps.lychee.outputs.exit_code != 0
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: Link Checker Report
+          content-filepath: ./lychee/out.md
+          labels: report, automated issue
