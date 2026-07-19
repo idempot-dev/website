@@ -19,7 +19,8 @@ These specifications define the expected behavior for idempotency middleware imp
 - **Fingerprint Conflict** (Section 2.2) — Detecting same body, different key
 - **Key Reuse Conflict** (Section 2.2) — Detecting same key, different body
 - **Concurrent Request Handling** (Section 2.6) — Handling in-flight requests
-- **Error Response Format** (Section 2.7) — RFC 7807 Problem Details format
+- **Error Response Format** (Section 2.7) — RFC 9457 Problem Details format
+- **Infrastructure Errors** (Store Unavailable) — 503 responses when the store is down
 
 ## Download
 
@@ -45,6 +46,18 @@ Feature: Idempotency-Key Header Compliance
     And the response content-type should be "application/problem+json"
     And the response body should contain "section-2.1"
 
+  Scenario: Missing key error includes RFC 9457 instance field
+    When I send a POST request to "/api" without an Idempotency-Key header
+    Then the response status should be 400
+    And the response body should contain "instance"
+    And the response body instance field should match pattern "urn:uuid:"
+
+  Scenario: Missing key error includes RFC 9457 retryable field
+    When I send a POST request to "/api" without an Idempotency-Key header
+    Then the response status should be 400
+    And the response body should contain "retryable"
+    And the response retryable field should be false
+
   Scenario: Empty Idempotency-Key header returns 400
     Given an empty Idempotency-Key header
     When I send a POST request to "/api" with body '{"foo":"bar"}'
@@ -54,6 +67,26 @@ Feature: Idempotency-Key Header Compliance
     And the response body should contain "type"
     And the response body should contain "title"
     And the response body should contain "detail"
+
+  Scenario: Empty key error includes RFC 9457 instance field
+    Given an empty Idempotency-Key header
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 400
+    And the response body should contain "instance"
+    And the response body instance field should match pattern "urn:uuid:"
+
+  Scenario: Empty key error includes RFC 9457 retryable field
+    Given an empty Idempotency-Key header
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 400
+    And the response body should contain "retryable"
+    And the response retryable field should be false
+
+  Scenario: Empty key error includes idempotency_key extension
+    Given an empty Idempotency-Key header
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 400
+    And the response body should contain "idempotency_key"
 
   Scenario: Idempotency-Key exceeding 255 characters returns 400
     Given an Idempotency-Key of 256 characters
@@ -65,6 +98,20 @@ Feature: Idempotency-Key Header Compliance
     And the response body should contain "title"
     And the response body should contain "detail"
 
+  Scenario: Too long key error includes RFC 9457 instance field
+    Given an Idempotency-Key of 256 characters
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 400
+    And the response body should contain "instance"
+    And the response body instance field should match pattern "urn:uuid:"
+
+  Scenario: Too long key error includes RFC 9457 retryable field
+    Given an Idempotency-Key of 256 characters
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 400
+    And the response body should contain "retryable"
+    And the response retryable field should be false
+
   Scenario: Idempotency-Key with commas returns 400
     Given an Idempotency-Key "key,with,commas,longer-than-twenty-chars"
     When I send a POST request to "/api" with body '{"foo":"bar"}'
@@ -74,6 +121,20 @@ Feature: Idempotency-Key Header Compliance
     And the response body should contain "type"
     And the response body should contain "title"
     And the response body should contain "detail"
+
+  Scenario: Invalid key with commas includes RFC 9457 instance field
+    Given an Idempotency-Key "key,with,commas,longer-than-twenty-chars"
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 400
+    And the response body should contain "instance"
+    And the response body instance field should match pattern "urn:uuid:"
+
+  Scenario: Invalid key with commas includes RFC 9457 retryable field
+    Given an Idempotency-Key "key,with,commas,longer-than-twenty-chars"
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 400
+    And the response body should contain "retryable"
+    And the response retryable field should be false
 
   Scenario: Valid Idempotency-Key is accepted
     Given an Idempotency-Key "8e03978e-40d5-43e8-bc93-6894a57f9324"
@@ -176,6 +237,24 @@ Feature: Idempotency-Key Header Compliance
     And the response body should contain "section-2.2"
     And 1 orders should exist in the database
 
+  Scenario: Fingerprint conflict includes RFC 9457 instance field
+    Given an Idempotency-Key "key1-12345678901234567"
+    And I previously sent a POST request to "/api" with body '{"foo":"bar"}'
+    And an Idempotency-Key "key2-12345678901234567"
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 409
+    And the response body should contain "instance"
+    And the response body instance field should match pattern "urn:uuid:"
+
+  Scenario: Fingerprint conflict includes RFC 9457 retryable field
+    Given an Idempotency-Key "key1-12345678901234567"
+    And I previously sent a POST request to "/api" with body '{"foo":"bar"}'
+    And an Idempotency-Key "key2-12345678901234567"
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 409
+    And the response body should contain "retryable"
+    And the response retryable field should be false
+
   # Key Reuse Conflict (Section 2.2 - Uniqueness)
 
   Scenario: Same key with different body returns 422
@@ -194,6 +273,30 @@ Feature: Idempotency-Key Header Compliance
     And the response content-type should be "application/problem+json"
     And the response body should contain "section-2.2"
     And the response body should contain "title"
+
+  Scenario: Key reuse conflict includes RFC 9457 instance field
+    Given an Idempotency-Key "abc123456789012345678"
+    And I previously sent a POST request to "/api" with body '{"foo":"bar"}'
+    When I send a POST request to "/api" with body '{"baz":"qux"}'
+    Then the response status should be 422
+    And the response body should contain "instance"
+    And the response body instance field should match pattern "urn:uuid:"
+
+  Scenario: Key reuse conflict includes RFC 9457 retryable field
+    Given an Idempotency-Key "abc123456789012345678"
+    And I previously sent a POST request to "/api" with body '{"foo":"bar"}'
+    When I send a POST request to "/api" with body '{"baz":"qux"}'
+    Then the response status should be 422
+    And the response body should contain "retryable"
+    And the response retryable field should be false
+
+  Scenario: Key reuse conflict includes idempotency_key extension
+    Given an Idempotency-Key "abc123456789012345678"
+    And I previously sent a POST request to "/api" with body '{"foo":"bar"}'
+    When I send a POST request to "/api" with body '{"baz":"qux"}'
+    Then the response status should be 422
+    And the response body should contain "idempotency_key"
+    And the response idempotency_key field should be "abc123456789012345678"
 
   # Concurrent Request Handling (Section 2.6 - Concurrent Request)
 
@@ -214,9 +317,25 @@ Feature: Idempotency-Key Header Compliance
     And the response body should contain "section-2.6"
     And the response body should contain "processed"
 
-  # Error Response Format (Section 2.7 - Error Handling)
+  Scenario: Concurrent request includes RFC 9457 instance field
+    Given an Idempotency-Key "abc123456789012345678"
+    And the key "abc123456789012345678" is currently being processed
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 409
+    And the response body should contain "instance"
+    And the response body instance field should match pattern "urn:uuid:"
 
-  Scenario: Missing key error follows RFC 7807
+  Scenario: Concurrent request includes RFC 9457 retryable field
+    Given an Idempotency-Key "abc123456789012345678"
+    And the key "abc123456789012345678" is currently being processed
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 409
+    And the response body should contain "retryable"
+    And the response retryable field should be true
+
+  # Error Response Format (Section 2.7 - Error Handling) - RFC 9457
+
+  Scenario: Missing key error follows RFC 9457
     When I send a POST request to "/api" without an Idempotency-Key header
     Then the response status should be 400
     And the response content-type should be "application/problem+json"
@@ -224,7 +343,7 @@ Feature: Idempotency-Key Header Compliance
     And the response body should contain "title"
     And the response body should contain "detail"
 
-  Scenario: Key reuse error follows RFC 7807
+  Scenario: Key reuse error follows RFC 9457
     Given an Idempotency-Key "abc123456789012345678"
     And I previously sent a POST request to "/api" with body '{"foo":"bar"}'
     When I send a POST request to "/api" with body '{"baz":"qux"}'
@@ -234,7 +353,7 @@ Feature: Idempotency-Key Header Compliance
     And the response body should contain "title"
     And the response body should contain "detail"
 
-  Scenario: Fingerprint conflict error follows RFC 7807
+  Scenario: Fingerprint conflict error follows RFC 9457
     Given an Idempotency-Key "key1-12345678901234567"
     And I previously sent a POST request to "/api" with body '{"foo":"bar"}'
     And an Idempotency-Key "key2-12345678901234567"
@@ -244,6 +363,31 @@ Feature: Idempotency-Key Header Compliance
     And the response body should contain "type"
     And the response body should contain "title"
     And the response body should contain "detail"
+
+  # Infrastructure Errors (Store Unavailable)
+
+  Scenario: Store unavailable returns 503
+    Given the idempotency store is unavailable
+    And an Idempotency-Key "abc123456789012345678"
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 503
+    And the response content-type should be "application/problem+json"
+
+  Scenario: Store unavailable includes RFC 9457 instance field
+    Given the idempotency store is unavailable
+    And an Idempotency-Key "abc123456789012345678"
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 503
+    And the response body should contain "instance"
+    And the response body instance field should match pattern "urn:uuid:"
+
+  Scenario: Store unavailable includes RFC 9457 retryable field
+    Given the idempotency store is unavailable
+    And an Idempotency-Key "abc123456789012345678"
+    When I send a POST request to "/api" with body '{"foo":"bar"}'
+    Then the response status should be 503
+    And the response body should contain "retryable"
+    And the response retryable field should be true
 
   # Edge Cases
 
