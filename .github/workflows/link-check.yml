@@ -1,19 +1,30 @@
 name: Link Check
 
+# Link checks fail the workflow; they never open issues. A checker that fails
+# to run must not look like a pass, and one issue per run buries the signal.
+#
+# GitHub disables scheduled workflows after 60 days without activity, so a
+# quiet period can switch this off. Re-enable it with `gh workflow enable`.
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
   schedule:
-    - cron: '0 0 * * *'  # Daily at midnight
+    - cron: "0 0 * * *" # Daily at midnight
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  LYCHEE_VERSION: 0.24.1
 
 jobs:
   link-checker:
     name: Link Checker
     runs-on: ubuntu-latest
-    permissions:
-      issues: write  # Required for creating issues from file
     steps:
       - uses: actions/checkout@v4
 
@@ -28,28 +39,21 @@ jobs:
       - name: Build site
         run: npm run build
 
-      - name: Link Checker
-        id: lychee
-        uses: lycheeverse/lychee-action@v2
-        with:
-          # Check all files in the built site
-          args: |
-            .vitepress/dist
-            --root-dir .vitepress/dist
-            --include-mail=false
-            --exclude "^file://"
-            --accept '200..=299,403'
-          # Don't fail action on broken links (we'll create an issue instead)
-          fail: false
-          # Output format
-          format: markdown
-          # Output file path
-          output: lychee/out.md
+      - name: Install lychee
+        run: |
+          set -euo pipefail
+          curl -fsSL --connect-timeout 15 --max-time 300 \
+            -o "$RUNNER_TEMP/lychee.tar.gz" \
+            "https://github.com/lycheeverse/lychee/releases/download/lychee-v${LYCHEE_VERSION}/lychee-x86_64-unknown-linux-gnu.tar.gz"
+          mkdir -p "$RUNNER_TEMP/lychee-extract"
+          tar -xzf "$RUNNER_TEMP/lychee.tar.gz" -C "$RUNNER_TEMP/lychee-extract"
+          install -m 0755 "$(find "$RUNNER_TEMP/lychee-extract" -type f -name lychee -print -quit)" "$RUNNER_TEMP/lychee"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/lychee" --version
 
-      - name: Create Issue From File
-        if: steps.lychee.outputs.exit_code != 0
-        uses: peter-evans/create-issue-from-file@v5
-        with:
-          title: Link Checker Report
-          content-filepath: ./lychee/out.md
-          labels: report, automated issue
+      - name: Check internal links
+        run: scripts/link-check.sh internal
+
+      - name: Check external links
+        if: ${{ !cancelled() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+        run: scripts/link-check.sh external

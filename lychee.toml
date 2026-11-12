@@ -1,0 +1,12 @@
+# Shared settings for the link checker. scripts/link-check.sh and the Link
+# Check workflow both read this file. Per-run options (the scheme to check)
+# stay on the command line.
+
+accept = ["200..=299", "403"]
+include_mail = false
+
+# Third-party hosts answer slowly or intermittently. Retry before reporting a
+# broken link.
+max_retries = 3
+retry_wait_time = 2
+timeout = 20
