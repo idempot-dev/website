@@ -11,7 +11,7 @@ hero:
       link: /learn/why
     - theme: alt
       text: View Specs
-      link: /specs
+      link: /specs/
 
 features:
   - title: IETF Draft Spec Compliant
